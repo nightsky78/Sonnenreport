@@ -17,6 +17,20 @@ conn.execute('''CREATE TABLE sonnendata
              timestamp DATETIME,
              remaining_capacity_wh NUMERIC);''')
 
+conn.execute('''CREATE TABLE powerprice (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                start_date DATETIME NOT NULL,
+                end_date DATETIME  NULL,
+                price FLOAT NOT NULL
+            )''')
+
+conn.execute('''CREATE TABLE feedprice (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                start_date DATETIME NOT NULL,
+                end_date DATETIME NULL,
+                price FLOAT NOT NULL
+            )''')
+
 # Commit the changes and close the connection
 conn.commit()
 conn.close()
