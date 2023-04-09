@@ -17,20 +17,24 @@ def index():
     db = db_handler.Database('sonnen_data.db')
     data = db.select_all()
     pprice = db.select_powerprice()
+    fprice = db.select_feedprice()
     logging.debug(data)
-    logging.debug(pprice)
+    logging.debug('powerprice', pprice)
+    logging.debug('feedprice', fprice)
     
-    cal = calculation.Calculator(data, pprice)
+    cal_cons = calculation.Calculator(data, pprice)
 
-    consumption = cal.consumption()
+    consumption = cal_cons.consumption()
 
+    cal_feed = calculation.Calculator(data, fprice)
 
+    feed = cal_feed.grid_feed()
     
     logging.debug(consumption)
 
     tile1 = 'Tile 1 content'
     tile2 = 'Tile 2 content'
-    tile3 = 'Tile 3 content'
+    tile3 = "{:.2f} €".format(feed)
     tile4 = "{:.2f} €".format(consumption)
 
     # Render the HTML template with the text content passed as arguments

@@ -14,6 +14,11 @@ class Database:
         self.cursor.execute("SELECT * FROM powerprice")
         return self.cursor.fetchall()    
     
+    def select_feedprice(self):
+        self.cursor.execute("SELECT * FROM feedprice")
+        return self.cursor.fetchall()    
+    
+
     def select_all(self):
         self.cursor.execute("SELECT * FROM sonnendata ORDER BY timestamp")
         return self.cursor.fetchall()

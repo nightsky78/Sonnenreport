@@ -4,6 +4,7 @@ import config
 import db_handler
 import time
 import logging
+import sqlite3
 
 # first set the log level
 logging.basicConfig(level=logging.DEBUG)
@@ -21,16 +22,17 @@ while True:
         except:
               logging.critical('Data request failed')
 
-        logging.debug(f" The return data is: {data['Apparent_output']}, {data['BatteryCharging']}, {data['BatteryDischarging']}, {data['GridFeedIn_W']}, {data['Consumption_Avg']}, {data['Consumption_W']}, {data['Production_W']}, {data['USOC']}, {data['Timestamp']}, {data['RemainingCapacity_Wh']}")
-
+        try:
+              logging.debug(f" The return data is: {data['Apparent_output']}, {data['BatteryCharging']}, {data['BatteryDischarging']}, {data['GridFeedIn_W']}, {data['Consumption_Avg']}, {data['Consumption_W']}, {data['Production_W']}, {data['USOC']}, {data['Timestamp']}, {data['RemainingCapacity_Wh']}")
+        except (NameError, ValueError) as e:
+              logging.debug(e)
 
         # now we need to store the data in the DB
         try:
               db = db_handler.Database('sonnen_data.db')
-        except:
-              logging.critical(' Data request failed.')
+        except sqlite3.Error as e:
+              logging.critical(' Open DB failed.', e)
 
-        
         try:
               db.insert_dataset(data["Apparent_output"], data["BatteryCharging"], data["BatteryDischarging"], 
                         data["GridFeedIn_W"], data["Consumption_Avg"], data["Consumption_W"], 
