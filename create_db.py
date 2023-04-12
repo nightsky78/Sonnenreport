@@ -47,7 +47,8 @@ try:
                 independence_w NUMERIC,
                 production_w NUMERIC,
                 grid_feedin_w NUMERIC,
-                timestamp DATETIME
+                date DATETIME, 
+                source TEXT
             )''')
 except sqlite3.OperationalError as e:
     print(e)

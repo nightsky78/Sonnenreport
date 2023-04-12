@@ -1,4 +1,5 @@
 import sqlite3
+import datetime as dt
 
 class Database:
     def __init__(self, db_file):
@@ -29,11 +30,23 @@ class Database:
         records = self.cursor.fetchall()
         return records
 
-    def insert_data(self, consumption, independence, production, grid_feedin, date):
+    def insert_data(self, consumption, independence, production, grid_feedin, date, source):
+        # check if data with given date already exists in database
+        query = '''SELECT date FROM manual_input WHERE date = ?'''
+        self.cursor.execute(query, (date,))
+        result = self.cursor.fetchone()
+
         # insert a new row into the manual_input table
-        query = '''INSERT INTO manual_input (consumption_w, independence_w, production_w, grid_feedin_w, date) 
-                   VALUES (?, ?, ?, ?, ?)'''
-        self.cursor.execute(query, (consumption, independence, production, grid_feedin, date))
+        if result is None:
+            # insert a new row into the manual_input table
+            # exclude data of today as this might not be complete.
+            datetime_obj = dt.datetime.strptime(date, '%Y-%m-%dT%H:%M')
+            date_string = datetime_obj.date().strftime('%Y-%m-%d')
+
+            if date_string != dt.datetime.today().strftime('%Y-%m-%d'):
+                query = '''INSERT INTO manual_input (consumption_w, independence_w, production_w, grid_feedin_w, date, source) 
+                        VALUES (?, ?, ?, ?, ?, ?)'''
+                self.cursor.execute(query, (consumption, independence, production, grid_feedin, date, source))
         self.conn.commit()
 
     def select_manual_input(self):

@@ -3,9 +3,13 @@ import db_handler
 import logging
 import calculation
 from datetime import datetime
+import aggregate
 
 # first set the log level
 logging.basicConfig(level=logging.DEBUG)
+
+# take the latest data and aggregate it. Later we make a button out of this. 
+aggregate.aggregate_data()
 
 app = Flask(__name__)
 
@@ -16,7 +20,7 @@ def index():
     
     # Get the data from the database
     db = db_handler.Database('sonnen_data.db')
-    data = db.select_all()
+    data = db.select_manual_input()
     pprice = db.select_powerprice()
     fprice = db.select_feedprice()
     logging.debug(data)
@@ -64,7 +68,7 @@ def manual_input():
             
             # Write the data to the database
             db = db_handler.Database('sonnen_data.db')
-            db.insert_data(consumption, independence, production, grid_feedin, date)
+            db.insert_data(consumption, independence, production, grid_feedin, date, 'M')
 
     # retrieve data from database
     db = db_handler.Database('sonnen_data.db')
@@ -72,7 +76,7 @@ def manual_input():
     logging.debug(manual_input_data)
     # add the letter M to each row in the manual_input_data list and reformat the date value
     try:
-        manual_input_data = [[row[0], row[1], row[2], row[3], row[4], datetime.strptime(row[5], '%Y-%m-%dT%H:%M').strftime('%Y-%m-%d'), 'M'] for row in manual_input_data]
+        manual_input_data = [[row[0], row[1], row[2], row[3], row[4], datetime.strptime(row[5], '%Y-%m-%dT%H:%M').strftime('%Y-%m-%d'), row[6]] for row in manual_input_data]
     except TypeError as e:
         print(e)
 
