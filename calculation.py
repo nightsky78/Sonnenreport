@@ -64,13 +64,13 @@ class Calculator:
         # calculate the consumption and return the result
         total_consumption = (merged_df.apply(lambda row: row['delta_hours'] * row['consumption_w']/1000 * row['price'], axis=1)).sum()
 
-        total_grid_feed_in = (merged_df.apply(lambda row: -1 * row['delta_hours'] * row['GridFeedIn_W']/1000 * row['price'] if row['GridFeedIn_W'] < 0 else 0, axis=1)).sum()
+        total_grid_feed_out = (merged_df.apply(lambda row: -1 * row['delta_hours'] * row['GridFeedIn_W']/1000 * row['price'] if row['GridFeedIn_W'] < 0 else 0, axis=1)).sum()
 
 
         logging.debug('calculation completed')
 
 
-        return(total_consumption-total_grid_feed_in)
+        return(total_consumption-total_grid_feed_out)
 
 
     def grid_feed(self):
@@ -137,4 +137,39 @@ class Calculator:
 
         return(total_grid_feed_in)
 
+    def perdaydata(self):
+
+        columns = ['id', 'output_num', 'charging', 'discharging', 'GridFeedIn_W',
+           'consumption_avg', 'consumption_w', 'production_w', 'usoc', 
+           'timestamp', 'remaining_capacity_wh']
+        
+        df = pd.DataFrame(self.battery, columns=columns)
+
+        # Convert timestamp column to datetime object
+        df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+        # Sort the DataFrame by timestamp column
+        df = df.sort_values('timestamp')
+
+        # Calculate the time difference between consecutive rows
+        df['delta_hours'] = (df['timestamp'] - df['timestamp'].shift(1)).dt.total_seconds() / 3600
+
+        # Create a new column for the product of output_num and time difference
+        df['consumption_avg_time_diff'] = df['consumption_avg'] * df['delta_hours']
+        df['production_time_diff'] = df['production_w'] * df['delta_hours'] 
+        
+        print('startting indexing')
+
+        df.set_index('timestamp', inplace=True)
+
+        # group by day and sum the 'consumption_w' column
+        consumption_by_day = df.groupby(pd.Grouper(freq='D'))['consumption_avg_time_diff'].sum()
+
+        production_by_day = df.groupby(pd.Grouper(freq='D'))['production_time_diff'].sum()
+
+        print('done with indexing')
+        print(production_by_day)
+   
+
+        return consumption_by_day
 

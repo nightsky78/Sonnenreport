@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -20,5 +24,12 @@
       <h2>Own Consumption accumulated [EUR]</h2>
       <p>{{ tile4 }}</p>
     </div>
+    <div>
+      <p>Click here to manually input data:</p>
+      <a href="/manual_input">Manual Input</a>
+  </div>
+  
   </body>
 </html>
+
+{% endblock %}

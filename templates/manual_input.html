@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Manual Input</h2>
+
+<form method="POST" action="{{ url_for('manual_input') }}">
+  <label for="consumption">Consumption [kWh]:</label><br>
+  <input type="text" id="consumption" name="consumption" required><br><br>
+
+  <label for="independence">Independence [%]:</label><br>
+  <input type="text" id="independence" name="independence" required><br><br>
+
+  <label for="production">Production [kWh]:</label><br>
+  <input type="text" id="production" name="production" required><br><br>
+
+  <label for="grid_feedin">Grid Feed-in [%]:</label><br>
+  <input type="text" id="grid_feedin" name="grid_feedin" required><br><br>
+
+  <label for="date">Date:</label><br>
+  <input type="datetime-local" id="date" name="date" required><br><br>
+
+  <input type="submit" value="Submit">
+</form>
+
+{% if manual_input %}
+<form method="POST">
+    <button type="submit" class="btn btn-danger" name="delete_button">Delete selected rows</button>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>ID</th>
+                <th>Consumption</th>
+                <th>Independence</th>
+                <th>Production</th>
+                <th>Grid Feed-in</th>
+                <th>Date</th>
+                <th>Source</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in manual_input %}
+            <tr>
+                <td><input type="checkbox" name="delete" value="{{ row[0] }}"></td>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }} kW</td>
+                <td>{{ row[2] }} kW</td>
+                <td>{{ row[3] }} kW</td>
+                <td>{{ row[4] }} KW</td>
+                <td>{{ row[5] }}</td>
+                <td>{{ row[6] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</form>
+
+{% endif %}
+
+{% endblock %}
