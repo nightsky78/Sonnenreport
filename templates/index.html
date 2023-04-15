@@ -2,18 +2,12 @@
 
 {% block content %}
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Flask Web App</title>
-  </head>
-  <body>
     <div class="tile">
-      <h2>Break even point [date]</h2>
+      <h2>Investment break even point [date]</h2>
       <p>{{ tile1 }}</p>
     </div>
     <div class="tile">
-      <h2>Annual target [kWh]</h2>
+      <h2>Average daily savings/income [EUR]</h2>
       <p>{{ tile2 }}</p>
     </div>
     <div class="tile">
@@ -24,12 +18,5 @@
       <h2>Own Consumption accumulated [EUR]</h2>
       <p>{{ tile4 }}</p>
     </div>
-    <div>
-      <p>Click here to manually input data:</p>
-      <a href="/manual_input">Manual Input</a>
-  </div>
   
-  </body>
-</html>
-
 {% endblock %}

@@ -4,6 +4,7 @@ import logging
 import calculation
 from datetime import datetime
 import aggregate
+import pandas as pd
 
 # first set the log level
 logging.basicConfig(level=logging.DEBUG)
@@ -31,14 +32,22 @@ def index():
 
     consumption = cal_cons.consumption()
 
+    time_diff = cal_cons.ave_profit()
+
     cal_feed = calculation.Calculator(data, fprice)
 
     feed = cal_feed.grid_feed()
-    
+
+  
     logging.debug(consumption)
 
-    tile1 = 'Tile 1 content'
-    tile2 = 'Tile 2 content'
+    # Print the time difference in days
+    ave_profit = (consumption + feed)/time_diff
+
+    break_even = cal_cons.break_even(ave_profit)
+
+    tile1 = break_even
+    tile2 = "{:.2f} €".format(ave_profit)
     tile3 = "{:.2f} €".format(feed)
     tile4 = "{:.2f} €".format(consumption)
 
@@ -74,7 +83,7 @@ def manual_input():
     db = db_handler.Database('sonnen_data.db')
     manual_input_data = db.select_manual_input()
     logging.debug(manual_input_data)
-    # add the letter M to each row in the manual_input_data list and reformat the date value
+
     try:
         manual_input_data = [[row[0], row[1], row[2], row[3], row[4], datetime.strptime(row[5], '%Y-%m-%dT%H:%M').strftime('%Y-%m-%d'), row[6]] for row in manual_input_data]
     except TypeError as e:

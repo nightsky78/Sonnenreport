@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 
 class Calculator:
@@ -165,4 +165,38 @@ class Calculator:
         print('done with indexing')   
 
         return df_combined
+    
+    def ave_profit(self):
 
+        # create a pandas DataFrame for the battery data
+        columns = ['id', 'consumption', 'independence', 'production', 'GridFeedIn', 'Date', 'Source']
+        
+        df = pd.DataFrame(self.calc_data, columns=columns)
+
+        # Convert the Date column to a datetime data type
+        df['Date'] = pd.to_datetime(df['Date'])
+
+        # Calculate the time difference between the first and last date
+        time_diff = max(df['Date']) - min(df['Date'])
+
+        # Print the time difference in days
+        return time_diff.days
+    
+    def break_even(self, ave_profit):
+        
+        cost = 40000
+        start_data = '2023-03-17'
+        
+        # Convert the start_data to a datetime object
+        start_date = datetime.strptime(start_data, '%Y-%m-%d').date()
+        
+        # Calculate the number of days to break-even
+        days_to_break_even = cost / ave_profit
+        
+        # Calculate the break-even date
+        break_even_date = start_date + timedelta(days=days_to_break_even)
+       
+        # Print the break-even date
+        logging.debug("The break-even date is:", break_even_date)
+
+        return break_even_date
