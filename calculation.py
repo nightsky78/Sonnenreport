@@ -166,7 +166,7 @@ class Calculator:
 
         return df_combined
     
-    def ave_profit(self):
+    def time_diff(self):
 
         # create a pandas DataFrame for the battery data
         columns = ['id', 'consumption', 'independence', 'production', 'GridFeedIn', 'Date', 'Source']
