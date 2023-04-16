@@ -197,6 +197,6 @@ class Calculator:
         break_even_date = start_date + timedelta(days=days_to_break_even)
        
         # Print the break-even date
-        logging.debug("The break-even date is:", break_even_date)
+        # logging.debug("The break-even date is:", break_even_date)
 
         return break_even_date

@@ -19,7 +19,6 @@ class Database:
         self.cursor.execute("SELECT * FROM feedprice")
         return self.cursor.fetchall()    
     
-
     def select_all(self):
         self.cursor.execute("SELECT * FROM sonnendata ORDER BY timestamp")
         return self.cursor.fetchall()
@@ -74,7 +73,36 @@ class Database:
         except sqlite3.Error as e:
             self.conn.rollback()
             raise e
+        
+    def delete_add_cost(self, delete_ids):
+        """
+        Deletes the rows with the given IDs from the manual_input table.
 
+        Args:
+            delete_ids (list[int]): A list of IDs to delete.
+
+        Raises:
+            sqlite3.Error: If the deletion fails.
+        """
+        # Create a string with placeholders for the IDs
+        id_placeholders = ','.join('?' * len(delete_ids))
+
+        # Execute the delete query
+        try:
+            self.conn.execute(f'DELETE FROM add_cost WHERE id IN ({id_placeholders})', delete_ids)
+            self.conn.commit()
+        except sqlite3.Error as e:
+            self.conn.rollback()
+            raise e
+
+    def insert_add_cost(self, category, description, cost, date):
+        self.cursor.execute("INSERT INTO add_cost (category, description, cost, timestamp) VALUES (?, ?, ?, ?)", (category, description, cost, date))
+        self.conn.commit()
+
+    def select_add_cost(self):
+        self.cursor.execute("SELECT * FROM add_cost ORDER BY timestamp")
+        data = self.cursor.fetchall()
+        return data
 
     def close_connection(self):
         self.conn.close()

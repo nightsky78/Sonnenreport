@@ -14,6 +14,8 @@
         padding: 20px;
       }
       #sidebar {
+        background-color: black;
+        color: white;
         float: left;
         width: 300px;
         height: 100%;
@@ -24,7 +26,6 @@
         color: inherit;
         font-size: 24px;
         font-weight: bold;
-        color: #77b;
         margin-bottom: 1000px; /* add margin to bottom of each link */
       }
       #sidebar nav a:hover {
@@ -46,13 +47,95 @@
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
       }
       .tile h2 {
-        font-size: 18px;
+        font-size: 20px;
         margin-bottom: 10px;
       }
       .tile p {
         font-size: 14px;
         margin-top: 0;
       }
+      button {
+        background-color: #a8a8a8;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 2px 2px 2px #333;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 800px;
+        margin: 20px auto;
+        box-shadow: 2px 2px 5px #333;
+      }
+
+      table th, table td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ccc;
+      }
+
+      table th {
+        background-color: #f2f2f2;
+      }
+      input[type="text"],
+      input[type="datetime-local"] {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 2px 2px 2px #333;
+        font-size: 16px;
+      }
+
+      input[type="submit"] {
+        background-color: #a8a8a8;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 2px 2px 2px #333;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      select {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 2px 2px 2px #333;
+        font-size: 16px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpolygon fill='%23989898' points='0,10 20,10 10,20'/%3E%3C/svg%3E") no-repeat right 10px center/15px auto;
+      }
+
+      select option:first-child {
+        color: gray;
+        display: none;
+      }
+
+      select::-ms-expand {
+        display: none;
+      }
+      label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        text-shadow: 0.5 px 0.5px 0.5px #ccc;
+      }
+
     </style>
   </head>
 
@@ -64,7 +147,7 @@
       <nav>
         <a href="/">Dashboard</a><br>
         <a href="/manual_input">Manual input</a><br>
-        <a href="/manual_input">Add Expense/Income</a>
+        <a href="/add_cost">Add Expense/Income</a>
         
       </nav>
     </div>

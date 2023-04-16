@@ -22,11 +22,9 @@ def index():
     # Get the data from the database
     db = db_handler.Database('sonnen_data.db')
     data = db.select_manual_input()
+    add_cost = db.select_add_cost()
     pprice = db.select_powerprice()
     fprice = db.select_feedprice()
-    logging.debug(data)
-    logging.debug('powerprice', pprice)
-    logging.debug('feedprice', fprice)
     
     cal_cons = calculation.Calculator(data, pprice)
 
@@ -38,11 +36,14 @@ def index():
 
     feed = cal_feed.grid_feed()
 
+    add_cost_sum = 0
+    for row in add_cost:
+        add_cost_sum += row[2]
   
-    logging.debug(consumption)
+    logging.debug('Consumption', consumption)
+    logging.debug('Add Cost', add_cost_sum)
 
-    # Print the time difference in days
-    ave_profit = (consumption + feed)/time_diff
+    ave_profit = (consumption + feed - add_cost_sum)/time_diff
 
     break_even = cal_cons.break_even(ave_profit)
 
@@ -50,9 +51,10 @@ def index():
     tile2 = "{:.2f} €".format(ave_profit)
     tile3 = "{:.2f} €".format(feed)
     tile4 = "{:.2f} €".format(consumption)
+    tile5 = "{:.2f} €".format(-1 * add_cost_sum)
 
     # Render the HTML template with the text content passed as arguments
-    return render_template('index.html', tile1=tile1, tile2=tile2, tile3=tile3, tile4=tile4)
+    return render_template('index.html', tile1=tile1, tile2=tile2, tile3=tile3, tile4=tile4, tile5=tile5)
 
 @app.route('/manual_input', methods=['GET', 'POST'])
 def manual_input():
@@ -90,6 +92,40 @@ def manual_input():
         print(e)
 
     return render_template('manual_input.html', manual_input=manual_input_data)
+
+@app.route('/add_cost', methods=['GET', 'POST'])
+def add_cost():
+    if request.method == 'POST':
+        # Check if delete button was clicked
+        if 'delete_button' in request.form:
+            # Get the IDs of the rows to be deleted
+            delete_ids = request.form.getlist('delete')
+            logging.debug(delete_ids)
+            # Delete the rows from the database
+            db = db_handler.Database('sonnen_data.db')
+            db.delete_add_cost(delete_ids)
+        else:
+        # Get the data from the form
+            category = request.form['category']
+            description = request.form['description']
+            cost = float(request.form['cost'])
+            date = request.form['date']
+            
+            # Write the data to the database
+            db = db_handler.Database('sonnen_data.db')
+            db.insert_add_cost(category, description, cost, date)
+
+    # retrieve data from database
+    db = db_handler.Database('sonnen_data.db')
+    add_cost_data = db.select_add_cost()
+    logging.debug(add_cost_data)
+
+    try:
+        add_cost_data = [[row[0], row[3], row[1], row[2], datetime.strptime(row[4], '%Y-%m-%dT%H:%M').strftime('%Y-%m-%d')] for row in add_cost_data]
+    except TypeError as e:
+        print(e)
+
+    return render_template('add_cost.html', add_cost=add_cost_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
