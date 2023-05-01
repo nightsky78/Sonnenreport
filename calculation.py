@@ -1,6 +1,7 @@
 import pandas as pd
 from datetime import datetime, timedelta
 import logging
+import config
 
 class Calculator:
     def __init__(self, calc_data, data_price):
@@ -184,8 +185,8 @@ class Calculator:
     
     def break_even(self, ave_profit):
         
-        cost = 40000
-        start_data = '2023-03-17'
+        cost = config.get_invest()
+        start_data = config.get_start_date()
         
         # Convert the start_data to a datetime object
         start_date = datetime.strptime(start_data, '%Y-%m-%d').date()
